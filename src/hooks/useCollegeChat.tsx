@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { initializeModels, classifyIntent, generateResponse } from '../services/nlpService';
+import { toast } from '@/hooks/use-toast';
 
 export interface ChatMessage {
   text: string;
@@ -22,6 +23,11 @@ export const useCollegeChat = () => {
         setIsModelReady(success);
         
         if (success) {
+          toast({
+            title: "AI Model Loaded",
+            description: "The chatbot is ready with GPU acceleration."
+          });
+          
           // Add a welcome message
           setMessages([
             {
@@ -31,9 +37,15 @@ export const useCollegeChat = () => {
           ]);
         } else {
           // Add a fallback message if model loading fails
+          toast({
+            title: "AI Model Information",
+            description: "Using standard mode without GPU acceleration.",
+            variant: "default"
+          });
+          
           setMessages([
             {
-              text: "I'm ready to answer your questions about our college! How can I help you today?",
+              text: "Welcome to the College Assistant! I'm ready to answer your questions about admissions, courses, fees, scholarships, and campus facilities. How can I help you today?",
               sender: 'bot'
             }
           ]);
@@ -41,6 +53,12 @@ export const useCollegeChat = () => {
       } catch (error) {
         console.error("Failed to load NLP models:", error);
         setIsModelReady(false);
+        
+        toast({
+          title: "AI Model Error",
+          description: "Running in compatibility mode. Some advanced features may be limited.",
+          variant: "destructive"
+        });
       }
     };
 
@@ -52,42 +70,47 @@ export const useCollegeChat = () => {
 
     // Add user message to chat
     const userMessage: ChatMessage = { text: inputMessage, sender: 'user' };
-    const processingMessage: ChatMessage = { text: 'Processing your query...', sender: 'bot' };
+    const newUserMessage = inputMessage;
     
-    setMessages(prevMessages => [...prevMessages, userMessage, processingMessage]);
+    setMessages(prevMessages => [...prevMessages, userMessage]);
     setInputMessage('');
     setIsLoading(true);
 
     try {
       // Classify the intent
-      const intent = await classifyIntent(inputMessage);
+      const intent = await classifyIntent(newUserMessage);
       console.log(`Detected intent: ${intent}`);
       
-      // Generate a response based on the intent
-      const responseText = await generateResponse(inputMessage, intent);
+      // Generate a response based on the intent and user message
+      const responseText = await generateResponse(newUserMessage, intent);
       
-      // Replace the processing message with the actual response
-      setMessages(prevMessages => {
-        const newMessages = [...prevMessages];
-        newMessages.pop(); // Remove the processing message
-        newMessages.push({ text: responseText, sender: 'bot', intent });
-        return newMessages;
-      });
+      // Add the response to the chat
+      setTimeout(() => {
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { text: responseText, sender: 'bot', intent }
+        ]);
+        setIsLoading(false);
+      }, 500); // Small delay to make it feel more natural
     } catch (error) {
       console.error("Error processing message:", error);
       
-      // Replace the processing message with an error message
-      setMessages(prevMessages => {
-        const newMessages = [...prevMessages];
-        newMessages.pop(); // Remove the processing message
-        newMessages.push({ 
-          text: "I'm having trouble processing your request right now. Could you try rephrasing your question?", 
-          sender: 'bot' 
+      setTimeout(() => {
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { 
+            text: "I'm having trouble processing your request right now. Could you try rephrasing your question?", 
+            sender: 'bot' 
+          }
+        ]);
+        setIsLoading(false);
+        
+        toast({
+          title: "Processing Error",
+          description: "There was an issue analyzing your question. Please try a different query.",
+          variant: "destructive"
         });
-        return newMessages;
-      });
-    } finally {
-      setIsLoading(false);
+      }, 500);
     }
   };
 

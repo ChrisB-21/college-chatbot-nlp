@@ -2,7 +2,7 @@
 import { pipeline } from "@huggingface/transformers";
 
 // GPU configuration for WebGPU acceleration
-const deviceConfig = { device: "webgpu" };
+const deviceConfig = { device: "webgpu" as const };
 
 // Cache for the NLP models to avoid reloading
 let intentClassifier: any = null;
@@ -72,22 +72,26 @@ const classifyIntentByKeywords = (message: string): string => {
   }
   
   if (lowerCaseMessage.includes("course") || lowerCaseMessage.includes("program") ||
-      lowerCaseMessage.includes("classes") || lowerCaseMessage.includes("major")) {
+      lowerCaseMessage.includes("classes") || lowerCaseMessage.includes("major") ||
+      lowerCaseMessage.includes("study") || lowerCaseMessage.includes("degree")) {
     return "course information";
   }
   
   if (lowerCaseMessage.includes("fee") || lowerCaseMessage.includes("tuition") ||
-      lowerCaseMessage.includes("cost") || lowerCaseMessage.includes("price")) {
+      lowerCaseMessage.includes("cost") || lowerCaseMessage.includes("price") ||
+      lowerCaseMessage.includes("payment") || lowerCaseMessage.includes("expensive")) {
     return "fee structure";
   }
   
   if (lowerCaseMessage.includes("scholarship") || lowerCaseMessage.includes("financial aid") ||
-      lowerCaseMessage.includes("grant") || lowerCaseMessage.includes("funding")) {
+      lowerCaseMessage.includes("grant") || lowerCaseMessage.includes("funding") ||
+      lowerCaseMessage.includes("aid") || lowerCaseMessage.includes("merit")) {
     return "scholarship information";
   }
   
   if (lowerCaseMessage.includes("campus") || lowerCaseMessage.includes("facilities") ||
-      lowerCaseMessage.includes("dorm") || lowerCaseMessage.includes("housing")) {
+      lowerCaseMessage.includes("dorm") || lowerCaseMessage.includes("housing") ||
+      lowerCaseMessage.includes("library") || lowerCaseMessage.includes("building")) {
     return "campus facilities";
   }
   
@@ -96,13 +100,16 @@ const classifyIntentByKeywords = (message: string): string => {
 
 // Generate response based on intent
 export const generateResponse = async (message: string, intent: string): Promise<string> => {
+  // Analyze the user's query to extract key topics and context
+  const lowerCaseMessage = message.toLowerCase();
+  
   // College knowledge base responses
   const responses: Record<string, string[]> = {
     "admission inquiries": [
       "Our admission process opens on August 15th each year. You'll need to submit your application, transcripts, and recommendation letters.",
-      "Admission requirements include a high school diploma, standardized test scores, and a personal statement.",
+      "Admission requirements include a high school diploma, standardized test scores (SAT/ACT), and a personal statement.",
       "The application deadline for the fall semester is April 15th, and for the spring semester it's November 1st.",
-      "International students need to submit additional documentation including proof of English proficiency."
+      "International students need to submit additional documentation including proof of English proficiency (TOEFL or IELTS)."
     ],
     "course information": [
       "We offer over 50 undergraduate programs across sciences, humanities, business, and arts.",
@@ -136,7 +143,34 @@ export const generateResponse = async (message: string, intent: string): Promise
     ]
   };
   
-  // Select a contextually appropriate response from the knowledge base
+  // Select a more contextually appropriate response based on the query
+  if (intent === "admission inquiries") {
+    if (lowerCaseMessage.includes("deadline") || lowerCaseMessage.includes("when")) {
+      return "The application deadline for the fall semester is April 15th, and for the spring semester it's November 1st. Early decision applications are due by November 15th.";
+    } else if (lowerCaseMessage.includes("requirement") || lowerCaseMessage.includes("need") || lowerCaseMessage.includes("document")) {
+      return "Admission requirements include a high school diploma, standardized test scores (SAT/ACT), a personal statement, and two letters of recommendation. International students also need to submit proof of English proficiency.";
+    } else if (lowerCaseMessage.includes("process") || lowerCaseMessage.includes("how") || lowerCaseMessage.includes("apply")) {
+      return "Our admission process is straightforward: complete the online application form, submit all required documents, pay the application fee ($50), and schedule an interview (optional but recommended). The admissions committee will review your application and notify you of their decision within 4-6 weeks.";
+    }
+  } else if (intent === "course information") {
+    if (lowerCaseMessage.includes("computer science") || lowerCaseMessage.includes("cs") || lowerCaseMessage.includes("programming")) {
+      return "Our Computer Science program offers specializations in artificial intelligence, cybersecurity, data science, and software engineering. The program includes hands-on projects, internship opportunities, and access to cutting-edge computing facilities.";
+    } else if (lowerCaseMessage.includes("business") || lowerCaseMessage.includes("management") || lowerCaseMessage.includes("mba")) {
+      return "The Business Administration program covers finance, marketing, operations, entrepreneurship, and management. Students participate in case studies, business simulations, and have opportunities to network with industry professionals.";
+    } else if (lowerCaseMessage.includes("online") || lowerCaseMessage.includes("remote") || lowerCaseMessage.includes("distance")) {
+      return "We offer flexible learning options including fully online degrees in Business, Psychology, and Computer Science. Our online courses use the same curriculum as on-campus courses and provide interactive virtual classrooms, discussion forums, and personalized support.";
+    }
+  } else if (intent === "fee structure") {
+    if (lowerCaseMessage.includes("payment plan") || lowerCaseMessage.includes("installment")) {
+      return "Yes, we offer flexible payment plans that allow you to pay your tuition in monthly installments. The standard plan divides your semester costs into 4 equal payments with no interest charges, only a small setup fee of $35.";
+    } else if (lowerCaseMessage.includes("international") || lowerCaseMessage.includes("foreign")) {
+      return "International student tuition is $27,500 per semester. Additional fees include a one-time international student service fee of $250 and mandatory international health insurance at $1,200 per year.";
+    } else if (lowerCaseMessage.includes("total") || lowerCaseMessage.includes("overall") || lowerCaseMessage.includes("all")) {
+      return "The estimated total cost of attendance per academic year, including tuition, fees, room and board, books, and personal expenses is approximately $35,000 for in-state students and $55,000 for out-of-state students.";
+    }
+  }
+  
+  // Default to selecting a random response for the intent if no specific context match
   const availableResponses = responses[intent] || responses["general inquiry"];
   const randomIndex = Math.floor(Math.random() * availableResponses.length);
   return availableResponses[randomIndex];
