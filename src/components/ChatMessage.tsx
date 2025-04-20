@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ChatMessage as ChatMessageType } from '../hooks/useCollegeChat';
-import { User, Bot, BookOpen, School, Coins, Award, Building, HelpCircle } from 'lucide-react';
+import { User, Bot, BookOpen, School, Coins, Award, Building, HelpCircle, Briefcase } from 'lucide-react';
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -25,6 +25,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         return <Award size={20} className="text-purple-600" />;
       case 'campus facilities':
         return <Building size={20} className="text-purple-600" />;
+      case 'placement information':
+        return <Briefcase size={20} className="text-purple-600" />;
       default:
         return <Bot size={20} className="text-purple-600" />;
     }
@@ -45,10 +47,23 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         return 'Scholarships';
       case 'campus facilities':
         return 'Campus';
+      case 'placement information':
+        return 'Placements';
       case 'general inquiry':
         return 'General Info';
       default:
         return typeof message.intent === 'string' ? message.intent : 'Unknown';
+    }
+  };
+  
+  // Ensure message text is a string
+  const getMessageText = () => {
+    if (typeof message.text === 'string') {
+      return message.text;
+    } else if (message.text === null || message.text === undefined) {
+      return "Sorry, I couldn't process that response.";
+    } else {
+      return JSON.stringify(message.text);
     }
   };
   
@@ -70,7 +85,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           : 'bg-purple-50 text-gray-800 mr-auto border border-purple-100'
       }`}>
         <p className="text-sm md:text-base whitespace-pre-wrap">
-          {typeof message.text === 'string' ? message.text : JSON.stringify(message.text)}
+          {getMessageText()}
         </p>
         
         {message.intent && !isUser && (

@@ -29,7 +29,7 @@ export const useCollegeChat = () => {
           
           setMessages([
             {
-              text: "Welcome to Coll.e! I can help you with questions about admissions, courses, fees, scholarships, and campus facilities. How can I assist you today?",
+              text: "Welcome to SRM University's AI Assistant! I can help you with questions about admissions, courses, fees, scholarships, campus facilities, and placements. How can I assist you today?",
               sender: 'bot'
             }
           ]);
@@ -42,7 +42,7 @@ export const useCollegeChat = () => {
           
           setMessages([
             {
-              text: "Welcome to Coll.e! I'm ready to answer your questions about admissions, courses, fees, scholarships, and campus facilities. How can I help you today?",
+              text: "Welcome to SRM University's AI Assistant! I'm ready to answer your questions about admissions, courses, fees, scholarships, campus facilities, and placements at SRMIST. How can I help you today?",
               sender: 'bot'
             }
           ]);
@@ -95,7 +95,7 @@ export const useCollegeChat = () => {
         setMessages(prevMessages => [
           ...prevMessages,
           { 
-            text: "I'm having trouble processing your request right now. Could you try rephrasing your question?", 
+            text: "I'm having trouble processing your request right now. Could you try rephrasing your question about SRM University?", 
             sender: 'bot' 
           }
         ]);

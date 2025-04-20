@@ -21,7 +21,10 @@ export const initializeModels = async () => {
         {
           ...deviceConfig,
           progress_callback: (progressInfo) => {
-            const progress = progressInfo.status === "progress" ? progressInfo.value ?? 0 : 0;
+            // Fix TypeScript error by safely accessing progress
+            const progress = progressInfo.status === "progress" ? 
+              (typeof progressInfo === 'object' && progressInfo !== null ? 
+                (progressInfo as any).value ?? 0 : 0) : 0;
             console.log(`Model loading progress: ${Math.round(progress * 100)}%`);
           }
         }
@@ -45,7 +48,10 @@ export const initializeModels = async () => {
           "Xenova/distilbert-base-uncased-mnli",
           {
             progress_callback: (progressInfo) => {
-              const progress = progressInfo.status === "progress" ? progressInfo.value ?? 0 : 0;
+              // Fix TypeScript error by safely accessing progress
+              const progress = progressInfo.status === "progress" ? 
+                (typeof progressInfo === 'object' && progressInfo !== null ? 
+                  (progressInfo as any).value ?? 0 : 0) : 0;
               console.log(`CPU model loading progress: ${Math.round(progress * 100)}%`);
             }
           }
