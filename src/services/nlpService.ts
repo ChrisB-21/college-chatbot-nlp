@@ -65,7 +65,6 @@ export const initializeModels = async () => {
       "facebook/bart-large-mnli", 
       {
         ...deviceConfig,
-        quantized: true // Use quantized model for better performance
       }
     );
     
