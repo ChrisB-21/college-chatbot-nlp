@@ -4,7 +4,7 @@ import { checkWebGPUCompatibility } from '../services/nlpService';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { Cpu, Check, X, AlertCircle, Terminal, Info } from 'lucide-react';
+import { Cpu, Check, X, AlertCircle, Terminal, Info, Server } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const WebGPUDiagnostic: React.FC = () => {
@@ -12,12 +12,43 @@ const WebGPUDiagnostic: React.FC = () => {
     isSupported?: boolean;
     adapterInfo?: any;
     errorMessage?: string;
+    modelLoadStatus?: {
+      attempted: boolean;
+      success: boolean;
+      error?: string;
+    };
     checked: boolean;
   }>({
     checked: false
   });
   
   const [isLoading, setIsLoading] = useState(false);
+
+  // Check for any model loading errors in session storage
+  useEffect(() => {
+    const modelLoadError = sessionStorage.getItem('model_load_error');
+    if (modelLoadError) {
+      setDiagnosticResult(prev => ({
+        ...prev,
+        modelLoadStatus: {
+          attempted: true,
+          success: false,
+          error: modelLoadError
+        }
+      }));
+    }
+    
+    const modelLoadSuccess = sessionStorage.getItem('model_load_success');
+    if (modelLoadSuccess === 'true') {
+      setDiagnosticResult(prev => ({
+        ...prev,
+        modelLoadStatus: {
+          attempted: true,
+          success: true
+        }
+      }));
+    }
+  }, []);
 
   const runDiagnostic = async () => {
     setIsLoading(true);
@@ -105,12 +136,28 @@ const WebGPUDiagnostic: React.FC = () => {
               </Alert>
             )}
             
+            {/* Model Loading Status */}
+            {diagnosticResult.modelLoadStatus?.attempted && (
+              <Alert className={`mt-4 ${diagnosticResult.modelLoadStatus.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                <Server className={`h-4 w-4 ${diagnosticResult.modelLoadStatus.success ? 'text-green-600' : 'text-red-600'}`} />
+                <AlertTitle className={diagnosticResult.modelLoadStatus.success ? 'text-green-700' : 'text-red-700'}>
+                  Hugging Face Model Status
+                </AlertTitle>
+                <AlertDescription className={diagnosticResult.modelLoadStatus.success ? 'text-green-600' : 'text-red-600'}>
+                  {diagnosticResult.modelLoadStatus.success 
+                    ? "Model loaded successfully from Hugging Face!"
+                    : `Failed to load model: ${diagnosticResult.modelLoadStatus.error || "Unknown error"}`}
+                </AlertDescription>
+              </Alert>
+            )}
+            
             <Alert className="mt-4 bg-blue-50 border-blue-200">
               <Info className="h-4 w-4 text-blue-600" />
               <AlertTitle className="text-blue-700">Model Loading Issue</AlertTitle>
               <AlertDescription className="text-blue-600">
                 Even though WebGPU is supported, the chatbot may run in standard mode if the AI models 
-                cannot be loaded from Hugging Face. This is a separate issue from WebGPU compatibility.
+                cannot be loaded from Hugging Face. This might be due to network issues, CORS restrictions,
+                or model availability. Check your browser's network tab for more information.
               </AlertDescription>
             </Alert>
           </div>
