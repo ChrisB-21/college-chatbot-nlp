@@ -20,7 +20,7 @@ export const initializeModels = async () => {
         "Xenova/distilbert-base-uncased-mnli", 
         {
           ...deviceConfig,
-          progress_callback: (progressInfo) => {
+          progress_callback: (progressInfo: any) => {
             // Fix TypeScript error by safely accessing progress
             const progress = progressInfo.status === "progress" ? 
               (typeof progressInfo === 'object' && progressInfo !== null ? 
@@ -47,7 +47,7 @@ export const initializeModels = async () => {
           "zero-shot-classification", 
           "Xenova/distilbert-base-uncased-mnli",
           {
-            progress_callback: (progressInfo) => {
+            progress_callback: (progressInfo: any) => {
               // Fix TypeScript error by safely accessing progress
               const progress = progressInfo.status === "progress" ? 
                 (typeof progressInfo === 'object' && progressInfo !== null ? 
@@ -75,4 +75,6 @@ export const initializeModels = async () => {
   }
 };
 
+// Helper function to process model outputs and ensure we get a proper string result
 export const getIntentClassifier = () => intentClassifier;
+

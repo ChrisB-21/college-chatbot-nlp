@@ -1,47 +1,46 @@
 
 const responses: Record<string, string[]> = {
   "admission inquiries": [
-    "SRM Institute of Science and Technology (SRMIST) offers admissions through SRMJEEE (SRM Joint Engineering Entrance Examination) for engineering programs. International students can apply through SRMSAT.",
-    "The application process for SRMIST typically starts in November/December each year for the next academic year. The SRMJEEE exam is usually conducted in April.",
-    "Required documents for SRMIST admission include 10th and 12th mark sheets, transfer certificate, and valid ID proof. International students need additional documents like passport and visa.",
-    "SRMIST follows a holistic admission process considering academic performance, entrance test scores, and other achievements. You can apply online through the official website www.srmist.edu.in."
+    "SRM Institute of Science and Technology (SRMIST) offers admissions through SRMJEEE (SRM Joint Engineering Entrance Examination) for engineering programs. You can apply at www.srmist.edu.in. The application process typically starts in November each year.",
+    "For admission to SRMIST, you need to take the SRMJEEE entrance exam or have valid scores from JEE Main. The eligibility requirement is 60% in PCM for most engineering programs.",
+    "SRMIST's admission process includes online application, entrance exam, counseling for program selection, and fee payment. International students can apply through SRMSAT.",
+    "Required documents for SRMIST admission include 10th and 12th mark sheets, transfer certificate, and valid ID proof. International students need additional documents like passport and visa."
   ],
   "course information": [
-    "SRM Institute of Science and Technology offers programs across Engineering, Medicine & Health Sciences, Science & Humanities, and Management studies.",
-    "SRMIST's popular programs include B.Tech in Computer Science, Electronics, Mechanical Engineering, and Biotechnology with specializations in AI, Data Science, and IoT.",
-    "The Medical programs at SRMIST include MBBS, BDS, Nursing, Physiotherapy, and various specializations in Health Sciences.",
-    "The Management School at SRMIST offers BBA, MBA, and specialized management programs with industry collaboration and international exchange opportunities.",
-    "SRMIST also offers research-oriented programs such as M.Tech, M.Sc., and Ph.D. in various disciplines with state-of-the-art research facilities."
+    "SRMIST offers B.Tech programs in Computer Science, Electronics, Mechanical, Civil, and Aerospace Engineering, as well as specialized programs in AI, Data Science, and IoT.",
+    "The Faculty of Medicine and Health Sciences at SRMIST offers MBBS, BDS, Nursing, Pharmacy, and various Allied Health Science programs with state-of-the-art medical facilities.",
+    "SRMIST's School of Management offers BBA and MBA programs with specializations in Marketing, Finance, HR, Business Analytics, and International Business.",
+    "The Faculty of Science and Humanities at SRMIST offers undergraduate and postgraduate programs in Physics, Chemistry, Mathematics, English, Psychology, and Journalism."
   ],
   "fee structure": [
-    "Fee structure at SRMIST varies by program. Engineering programs typically range between ₹2-4 lakhs per year depending on the specialization and campus chosen.",
-    "Medical and Dental programs at SRMIST have different fee structures, generally higher than engineering programs, ranging from ₹5-20 lakhs per year.",
-    "Hostel and accommodation fees at SRMIST are separate and depend on the type of accommodation chosen, ranging from ₹75,000 to ₹1.5 lakhs per year.",
-    "International students at SRMIST have a different fee structure, usually quoted in USD, with tuition ranging from $5,000-$10,000 per year depending on the program."
+    "Engineering programs at SRMIST typically range between ₹2.25-3.75 lakhs per year depending on the specialization and campus chosen.",
+    "Medical and Dental programs at SRMIST have different fee structures, generally ranging from ₹5-20 lakhs per year depending on the program.",
+    "Management programs like MBA at SRMIST cost approximately ₹2-3 lakhs per year, with additional fees for international immersion programs.",
+    "SRMIST offers flexible payment plans and semester-wise fee payment options. Some programs also offer EMI options through partner banks."
   ],
   "scholarship information": [
-    "SRMIST offers merit-based scholarships up to 100% tuition fee waiver for students with outstanding academic performance or entrance exam scores.",
-    "Sports scholarships are available at SRMIST for students with exceptional achievements in sports at national and international levels.",
-    "SRMIST provides special scholarships for economically disadvantaged students through various government and institutional schemes.",
-    "International students at SRMIST can apply for specific international student scholarships and country-specific aid programs."
+    "SRMIST offers merit scholarships up to 100% tuition fee waiver for students with exceptional academic performance in board exams or entrance tests.",
+    "Sports scholarships at SRMIST are available for students who have represented at state, national, or international levels in recognized sports.",
+    "SRMIST provides special category scholarships for economically disadvantaged students and those from rural backgrounds through various government and institutional schemes.",
+    "Research scholarships and fellowships are available at SRMIST for Ph.D. students and those engaged in sponsored research projects."
   ],
   "campus facilities": [
-    "SRMIST's main campus is in Kattankulathur, Chennai, with modern infrastructure spanning 250+ acres and state-of-the-art laboratories, research centers, and innovation hubs.",
-    "The campus includes a central library with over 100,000 books, sports facilities including Olympic-sized swimming pool, medical center, and separate hostels for boys and girls.",
-    "SRMIST has a fully Wi-Fi enabled campus with smart classrooms, research centers, incubation center, and modern teaching aids.",
-    "Multiple campuses across India including Chennai (Kattankulathur, Ramapuram, Vadapalani) and NCR provide students with diverse learning environments and opportunities."
+    "SRMIST's main campus in Kattankulathur, Chennai spans over 250 acres with modern infrastructure including AC classrooms, research centers, innovation hubs, and recreational facilities.",
+    "Hostel facilities at SRMIST include separate accommodations for boys and girls with options ranging from standard to premium rooms, all with Wi-Fi connectivity, common rooms, and dining facilities.",
+    "SRMIST campuses feature sports facilities including cricket grounds, basketball courts, tennis courts, swimming pools, fitness centers, and indoor games areas.",
+    "The central library at SRMIST houses over 100,000 books, journals, and digital resources with spacious reading areas, computer labs, and access to international databases."
   ],
   "placement information": [
-    "SRMIST has an impressive placement record with over 600+ companies visiting for campus recruitment annually, including major tech giants like Microsoft, Amazon, and Google.",
+    "SRMIST has a dedicated Placement Cell that facilitates campus recruitment with over 600+ companies visiting annually including Microsoft, Amazon, Google, and other top recruiters.",
     "The average salary package for SRMIST graduates ranges from ₹4-6 lakhs per annum, with top packages going as high as ₹42 lakhs per annum for exceptional students.",
     "SRMIST's School of Engineering has particularly strong placement statistics with over 85% of eligible students getting placed in reputed companies.",
-    "The Career Development Center at SRMIST provides comprehensive pre-placement training, including aptitude tests, group discussions, and mock interviews to prepare students for successful careers."
+    "SRMIST offers pre-placement training including aptitude tests, technical assessments, mock interviews, and soft skills development to prepare students for successful placements."
   ],
   "general inquiry": [
-    "SRM Institute of Science and Technology (SRMIST) is a leading private university in India, established in 1985, with NAAC A++ accreditation and ranked among the top institutions by NIRF.",
-    "SRMIST has strong international collaborations with over 150+ global universities and offers semester abroad programs, dual degree options, and international internships.",
-    "The university has robust research facilities with over 30 specialized research centers working on cutting-edge technologies and sustainable development solutions.",
-    "SRMIST hosts numerous technical, cultural, and sports events throughout the year, including 'Aaruush' - one of India's largest technical festivals, and 'Milan' - the cultural extravaganza."
+    "SRM Institute of Science and Technology (SRMIST) is a leading private university in India established in 1985, with NAAC A++ accreditation and ranked among the top institutions by NIRF.",
+    "SRMIST has multiple campuses across India, with the main campus in Kattankulathur (Chennai), and other campuses in Ramapuram, Vadapalani, Delhi-NCR, and Amaravati.",
+    "The university offers a wide range of programs in Engineering, Medicine, Management, Science, and Humanities at undergraduate, postgraduate, and doctoral levels.",
+    "SRMIST has strong international collaborations with over 150+ global universities, offering semester abroad programs, dual degree options, student exchange, and international internships."
   ]
 };
 
@@ -51,7 +50,7 @@ export const generateResponse = async (message: string, intent: string): Promise
   // More specific handling of user queries to provide targeted responses
   if (intent === "admission inquiries") {
     if (lowerCaseMessage.includes("deadline") || lowerCaseMessage.includes("when") || lowerCaseMessage.includes("date")) {
-      return "The application process for SRMIST typically starts in November/December each year for the next academic year. The SRMJEEE exam is usually conducted in April, with results announced by May. Admission offers are made shortly after.";
+      return "The application process for SRMIST typically starts in November/December each year for the next academic year. The SRMJEEE exam is usually conducted in April, with results announced by May. Admission offers are made shortly after based on merit and counseling.";
     } else if (lowerCaseMessage.includes("requirement") || lowerCaseMessage.includes("need") || lowerCaseMessage.includes("document") || lowerCaseMessage.includes("eligibility")) {
       return "For SRMIST admissions, you need: 1) Completed application form, 2) 10th and 12th mark sheets (minimum 60% in PCM for engineering), 3) Valid ID proof, 4) Recent passport-sized photographs, and 5) Application fee payment receipt. International students need additional documents like passport copy, visa, and English proficiency test scores.";
     } else if (lowerCaseMessage.includes("process") || lowerCaseMessage.includes("how") || lowerCaseMessage.includes("apply") || lowerCaseMessage.includes("steps")) {
