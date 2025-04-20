@@ -6,7 +6,6 @@ import { Send, Cpu } from 'lucide-react';
 import { useCollegeChat } from '../hooks/useCollegeChat';
 import ChatMessage from '../components/ChatMessage';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import WebGPUDiagnostic from '../components/WebGPUDiagnostic';
 
 const Index = () => {
   const {
@@ -20,7 +19,6 @@ const Index = () => {
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -29,7 +27,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header */}
       <header className="bg-purple-700 text-white p-4 shadow-md">
         <div className="container mx-auto max-w-3xl flex items-center justify-between">
           <h1 className="text-xl md:text-2xl font-bold flex items-center">
@@ -37,17 +34,13 @@ const Index = () => {
           </h1>
           <div className="flex items-center text-xs md:text-sm bg-purple-600 px-3 py-1 rounded-full">
             <span className={`h-2 w-2 rounded-full mr-2 ${isModelReady ? 'bg-green-400' : 'bg-yellow-400'}`} />
-            {isModelReady ? 'GPU Accelerated' : 'Standard Mode'}
+            {isModelReady ? 'AI Ready' : 'Loading...'}
           </div>
         </div>
       </header>
 
-      {/* Chat Container */}
       <div className="flex-grow container mx-auto max-w-3xl py-6 px-4">
-        {/* WebGPU Diagnostic Tool */}
-        <WebGPUDiagnostic />
-        
-        <Card className="h-full flex flex-col mt-6">
+        <Card className="h-full flex flex-col">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg md:text-xl">Chat with Our College Assistant</CardTitle>
             <CardDescription>
@@ -56,7 +49,6 @@ const Index = () => {
           </CardHeader>
 
           <CardContent className="flex-grow flex flex-col pt-4">
-            {/* Messages Container */}
             <div className="flex-grow overflow-y-auto mb-4 space-y-6 pr-2">
               {messages.map((msg, index) => (
                 <ChatMessage key={index} message={msg} />
@@ -64,7 +56,6 @@ const Index = () => {
               <div ref={messagesEndRef} />
             </div>
             
-            {/* Input Container */}
             <div className="flex space-x-2 pt-4 border-t">
               <Input 
                 value={inputMessage}
@@ -88,9 +79,8 @@ const Index = () => {
         </Card>
       </div>
       
-      {/* Footer */}
       <footer className="bg-gray-100 py-3 text-center text-sm text-gray-600">
-        Powered by Hugging Face Transformers with WebGPU acceleration
+        Powered by AI Assistant for SRM University
       </footer>
     </div>
   );
