@@ -1,4 +1,5 @@
-# Welcome to your Lovable project
+
+# Welcome to your College Chatbot NLP Project
 
 ## Project info
 
