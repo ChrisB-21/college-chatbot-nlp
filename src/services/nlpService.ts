@@ -1,3 +1,4 @@
+
 import { pipeline } from "@huggingface/transformers";
 
 // GPU configuration for WebGPU acceleration
@@ -36,7 +37,12 @@ export const checkWebGPUCompatibility = async (): Promise<{
     
     try {
       if (adapter.requestAdapterInfo && typeof adapter.requestAdapterInfo === 'function') {
-        adapterInfo = await adapter.requestAdapterInfo();
+        // Try to get adapter info with unmask hints
+        adapterInfo = await adapter.requestAdapterInfo({
+          unmaskHints: ["vendor", "architecture", "device", "description"]
+        });
+        
+        console.log("Adapter info retrieved:", adapterInfo);
       }
     } catch (infoError) {
       console.warn("Could not get adapter info:", infoError);
@@ -47,6 +53,7 @@ export const checkWebGPUCompatibility = async (): Promise<{
       adapterInfo
     };
   } catch (error) {
+    console.error("Error checking WebGPU compatibility:", error);
     return {
       isSupported: false,
       errorMessage: `Error checking WebGPU compatibility: ${error instanceof Error ? error.message : String(error)}`
@@ -59,10 +66,10 @@ export const initializeModels = async () => {
   try {
     console.log("Attempting to initialize NLP models on WebGPU...");
     
-    // Use a more reliable and smaller model for intent classification
+    // Use a smaller, more compatible model
     intentClassifier = await pipeline(
       "zero-shot-classification", 
-      "facebook/bart-large-mnli", 
+      "Xenova/distilbert-base-uncased-mnli", // Use Xenova's model which has ONNX exports
       {
         ...deviceConfig,
       }
@@ -78,7 +85,7 @@ export const initializeModels = async () => {
       console.log("Falling back to CPU model initialization...");
       intentClassifier = await pipeline(
         "zero-shot-classification", 
-        "facebook/bart-large-mnli"
+        "Xenova/distilbert-base-uncased-mnli" // Use Xenova's model which has ONNX exports
       );
       
       console.warn("Models loaded on CPU due to WebGPU initialization failure");

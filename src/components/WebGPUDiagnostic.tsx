@@ -4,7 +4,8 @@ import { checkWebGPUCompatibility } from '../services/nlpService';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
-import { Cpu, Check, X, AlertCircle, Terminal } from 'lucide-react';
+import { Cpu, Check, X, AlertCircle, Terminal, Info } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const WebGPUDiagnostic: React.FC = () => {
   const [diagnosticResult, setDiagnosticResult] = useState<{
@@ -73,20 +74,45 @@ const WebGPUDiagnostic: React.FC = () => {
               <Check className="mr-2" /> WebGPU is supported on your system!
             </div>
             
-            {diagnosticResult.adapterInfo && (
+            {diagnosticResult.adapterInfo && Object.keys(diagnosticResult.adapterInfo).length > 0 ? (
               <div className="mt-4 p-3 bg-gray-50 rounded-md text-sm">
                 <p className="font-semibold mb-1 flex items-center">
                   <Terminal className="mr-2 h-4 w-4" /> GPU Information:
                 </p>
                 <ul className="text-gray-700 space-y-1 pl-6 list-disc">
-                  <li>Vendor: {diagnosticResult.adapterInfo.vendor}</li>
-                  <li>Architecture: {diagnosticResult.adapterInfo.architecture}</li>
+                  {diagnosticResult.adapterInfo.vendor && (
+                    <li>Vendor: {diagnosticResult.adapterInfo.vendor}</li>
+                  )}
+                  {diagnosticResult.adapterInfo.architecture && (
+                    <li>Architecture: {diagnosticResult.adapterInfo.architecture}</li>
+                  )}
                   {diagnosticResult.adapterInfo.description && (
                     <li>Description: {diagnosticResult.adapterInfo.description}</li>
                   )}
+                  {diagnosticResult.adapterInfo.device && (
+                    <li>Device: {diagnosticResult.adapterInfo.device}</li>
+                  )}
                 </ul>
               </div>
+            ) : (
+              <Alert className="mt-2">
+                <Info className="h-4 w-4" />
+                <AlertTitle>Limited Information Available</AlertTitle>
+                <AlertDescription>
+                  Your browser supports WebGPU but detailed GPU information couldn't be retrieved.
+                  This may be due to privacy or security settings in your browser.
+                </AlertDescription>
+              </Alert>
             )}
+            
+            <Alert className="mt-4 bg-blue-50 border-blue-200">
+              <Info className="h-4 w-4 text-blue-600" />
+              <AlertTitle className="text-blue-700">Model Loading Issue</AlertTitle>
+              <AlertDescription className="text-blue-600">
+                Even though WebGPU is supported, the chatbot may run in standard mode if the AI models 
+                cannot be loaded from Hugging Face. This is a separate issue from WebGPU compatibility.
+              </AlertDescription>
+            </Alert>
           </div>
         ) : (
           <div>
