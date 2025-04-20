@@ -8,6 +8,45 @@ const deviceConfig = { device: "webgpu" as const };
 let intentClassifier: any = null;
 let responseGenerator: any = null;
 
+// WebGPU diagnostics function
+export const checkWebGPUCompatibility = async (): Promise<{
+  isSupported: boolean;
+  adapterInfo?: any;
+  errorMessage?: string;
+}> => {
+  try {
+    // Check if the navigator.gpu exists (basic WebGPU support check)
+    if (!navigator.gpu) {
+      return {
+        isSupported: false,
+        errorMessage: "WebGPU is not supported in this browser. Try using Chrome 113+ or Chrome Canary."
+      };
+    }
+
+    // Try to request an adapter which will succeed only if hardware supports WebGPU
+    const adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) {
+      return {
+        isSupported: false,
+        errorMessage: "WebGPU adapter could not be requested. Your GPU may not be compatible or WebGPU may be disabled."
+      };
+    }
+
+    // Get adapter info for detailed diagnostics
+    const adapterInfo = await adapter.requestAdapterInfo();
+    
+    return {
+      isSupported: true,
+      adapterInfo
+    };
+  } catch (error) {
+    return {
+      isSupported: false,
+      errorMessage: `Error checking WebGPU compatibility: ${error instanceof Error ? error.message : String(error)}`
+    };
+  }
+};
+
 // Initialize models
 export const initializeModels = async () => {
   try {

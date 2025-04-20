@@ -6,6 +6,7 @@ import { Send, Cpu } from 'lucide-react';
 import { useCollegeChat } from '../hooks/useCollegeChat';
 import ChatMessage from '../components/ChatMessage';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import WebGPUDiagnostic from '../components/WebGPUDiagnostic';
 
 const Index = () => {
   const {
@@ -43,7 +44,10 @@ const Index = () => {
 
       {/* Chat Container */}
       <div className="flex-grow container mx-auto max-w-3xl py-6 px-4">
-        <Card className="h-full flex flex-col">
+        {/* WebGPU Diagnostic Tool */}
+        <WebGPUDiagnostic />
+        
+        <Card className="h-full flex flex-col mt-6">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg md:text-xl">Chat with Our College Assistant</CardTitle>
             <CardDescription>
