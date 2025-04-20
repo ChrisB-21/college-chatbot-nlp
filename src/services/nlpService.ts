@@ -32,8 +32,20 @@ export const checkWebGPUCompatibility = async (): Promise<{
       };
     }
 
-    // Get adapter info for detailed diagnostics
-    const adapterInfo = await adapter.requestAdapterInfo();
+    // Get adapter info if the function is available
+    let adapterInfo = { vendor: "Unknown", architecture: "Unknown", device: "Unknown", description: "GPU information unavailable" };
+    
+    try {
+      // Check if requestAdapterInfo exists before calling it
+      if (adapter.requestAdapterInfo && typeof adapter.requestAdapterInfo === 'function') {
+        adapterInfo = await adapter.requestAdapterInfo();
+      } else {
+        console.log("requestAdapterInfo is not available in this browser");
+      }
+    } catch (infoError) {
+      console.warn("Could not get adapter info:", infoError);
+      // Continue without adapter info
+    }
     
     return {
       isSupported: true,
