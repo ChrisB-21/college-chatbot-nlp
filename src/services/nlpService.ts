@@ -1,3 +1,4 @@
+
 import { pipeline } from "@huggingface/transformers";
 
 // GPU configuration for WebGPU acceleration
@@ -77,8 +78,9 @@ export const initializeModels = async () => {
         {
           ...deviceConfig,
           // Hugging Face specific options to improve compatibility
-          progress_callback: (progress) => {
-            console.log(`Model loading progress: ${Math.round(progress.progress * 100)}%`);
+          progress_callback: (progressInfo) => {
+            // Access the progress value properly based on the object structure
+            console.log(`Model loading progress: ${Math.round(progressInfo.status === "running" ? (progressInfo.value * 100) : 0)}%`);
           }
         }
       );
@@ -101,8 +103,9 @@ export const initializeModels = async () => {
           "zero-shot-classification", 
           "Xenova/distilbert-base-uncased-mnli",
           {
-            progress_callback: (progress) => {
-              console.log(`CPU model loading progress: ${Math.round(progress.progress * 100)}%`);
+            progress_callback: (progressInfo) => {
+              // Access the progress value properly based on the object structure
+              console.log(`CPU model loading progress: ${Math.round(progressInfo.status === "running" ? (progressInfo.value * 100) : 0)}%`);
             }
           }
         );
@@ -272,3 +275,4 @@ export const generateResponse = async (message: string, intent: string): Promise
   const randomIndex = Math.floor(Math.random() * availableResponses.length);
   return availableResponses[randomIndex];
 };
+
