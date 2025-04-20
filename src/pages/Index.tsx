@@ -33,7 +33,7 @@ const Index = () => {
       <header className="bg-purple-700 text-white p-4 shadow-md">
         <div className="container mx-auto max-w-3xl flex items-center justify-between">
           <h1 className="text-xl md:text-2xl font-bold flex items-center">
-            <Cpu className="mr-2" /> College Assistant
+            <Cpu className="mr-2" /> Coll.e
           </h1>
           <div className="flex items-center text-xs md:text-sm bg-purple-600 px-3 py-1 rounded-full">
             <span className={`h-2 w-2 rounded-full mr-2 ${isModelReady ? 'bg-green-400' : 'bg-yellow-400'}`} />

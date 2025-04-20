@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { initializeModels, classifyIntent, generateResponse } from '../services/nlpService';
 import { toast } from '@/hooks/use-toast';
@@ -15,7 +14,6 @@ export const useCollegeChat = () => {
   const [isModelReady, setIsModelReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize NLP models when the component mounts
   useEffect(() => {
     const loadModels = async () => {
       try {
@@ -25,18 +23,16 @@ export const useCollegeChat = () => {
         if (success) {
           toast({
             title: "AI Model Loaded",
-            description: "The chatbot is ready with GPU acceleration."
+            description: "Coll.e is ready with GPU acceleration."
           });
           
-          // Add a welcome message
           setMessages([
             {
-              text: "Welcome to the College Assistant! I can help you with questions about admissions, courses, fees, scholarships, and campus facilities. How can I assist you today?",
+              text: "Welcome to Coll.e! I can help you with questions about admissions, courses, fees, scholarships, and campus facilities. How can I assist you today?",
               sender: 'bot'
             }
           ]);
         } else {
-          // Add a fallback message if model loading fails
           toast({
             title: "AI Model Information",
             description: "Using standard mode without GPU acceleration.",
@@ -45,7 +41,7 @@ export const useCollegeChat = () => {
           
           setMessages([
             {
-              text: "Welcome to the College Assistant! I'm ready to answer your questions about admissions, courses, fees, scholarships, and campus facilities. How can I help you today?",
+              text: "Welcome to Coll.e! I'm ready to answer your questions about admissions, courses, fees, scholarships, and campus facilities. How can I help you today?",
               sender: 'bot'
             }
           ]);
@@ -68,7 +64,6 @@ export const useCollegeChat = () => {
   const handleSendMessage = async () => {
     if (inputMessage.trim() === '') return;
 
-    // Add user message to chat
     const userMessage: ChatMessage = { text: inputMessage, sender: 'user' };
     const newUserMessage = inputMessage;
     
@@ -77,21 +72,18 @@ export const useCollegeChat = () => {
     setIsLoading(true);
 
     try {
-      // Classify the intent
       const intent = await classifyIntent(newUserMessage);
       console.log(`Detected intent: ${intent}`);
       
-      // Generate a response based on the intent and user message
       const responseText = await generateResponse(newUserMessage, intent);
       
-      // Add the response to the chat
       setTimeout(() => {
         setMessages(prevMessages => [
           ...prevMessages,
           { text: responseText, sender: 'bot', intent }
         ]);
         setIsLoading(false);
-      }, 500); // Small delay to make it feel more natural
+      }, 500);
     } catch (error) {
       console.error("Error processing message:", error);
       
