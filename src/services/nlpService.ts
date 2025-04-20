@@ -1,4 +1,3 @@
-
 import { pipeline } from "@huggingface/transformers";
 
 // GPU configuration for WebGPU acceleration
@@ -32,19 +31,15 @@ export const checkWebGPUCompatibility = async (): Promise<{
       };
     }
 
-    // Get adapter info if the function is available
+    // Get adapter info
     let adapterInfo = { vendor: "Unknown", architecture: "Unknown", device: "Unknown", description: "GPU information unavailable" };
     
     try {
-      // Check if requestAdapterInfo exists before calling it
       if (adapter.requestAdapterInfo && typeof adapter.requestAdapterInfo === 'function') {
         adapterInfo = await adapter.requestAdapterInfo();
-      } else {
-        console.log("requestAdapterInfo is not available in this browser");
       }
     } catch (infoError) {
       console.warn("Could not get adapter info:", infoError);
-      // Continue without adapter info
     }
     
     return {
@@ -62,20 +57,37 @@ export const checkWebGPUCompatibility = async (): Promise<{
 // Initialize models
 export const initializeModels = async () => {
   try {
-    console.log("Initializing NLP models on WebGPU...");
+    console.log("Attempting to initialize NLP models on WebGPU...");
     
+    // Use a more reliable and smaller model for intent classification
     intentClassifier = await pipeline(
-      "text-classification",
-      "facebook/bart-large-mnli",
-      deviceConfig
+      "zero-shot-classification", 
+      "facebook/bart-large-mnli", 
+      {
+        ...deviceConfig,
+        quantized: true // Use quantized model for better performance
+      }
     );
     
-    console.log("Intent classifier loaded successfully");
-    
+    console.log("Intent classifier loaded successfully on WebGPU");
     return true;
   } catch (error) {
     console.error("Error initializing NLP models:", error);
-    return false;
+    
+    try {
+      // Fallback to CPU if WebGPU initialization fails
+      console.log("Falling back to CPU model initialization...");
+      intentClassifier = await pipeline(
+        "zero-shot-classification", 
+        "facebook/bart-large-mnli"
+      );
+      
+      console.warn("Models loaded on CPU due to WebGPU initialization failure");
+      return false;
+    } catch (fallbackError) {
+      console.error("Failed to initialize models even on CPU:", fallbackError);
+      return false;
+    }
   }
 };
 
