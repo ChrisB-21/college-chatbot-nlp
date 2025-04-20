@@ -11,4 +11,16 @@ interface GPU {
 
 interface GPUAdapter {
   requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice>;
+  requestAdapterInfo(options?: GPURequestAdapterInfoOptions): Promise<GPUAdapterInfo>;
+}
+
+interface GPURequestAdapterInfoOptions {
+  unmaskHints?: string[];
+}
+
+interface GPUAdapterInfo {
+  vendor: string;
+  architecture: string;
+  device: string;
+  description: string;
 }
