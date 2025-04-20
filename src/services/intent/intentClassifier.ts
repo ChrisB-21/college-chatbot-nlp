@@ -52,15 +52,22 @@ export const classifyIntent = async (message: string): Promise<string> => {
       "general inquiry"
     ];
 
-    if (!intentClassifier) {
+    const classifier = getIntentClassifier();
+    if (!classifier) {
       return classifyIntentByKeywords(message);
     }
 
-    const results = await intentClassifier(message, {
+    const results = await classifier(message, {
       candidate_labels: labels,
     });
 
-    return results.labels[0];
+    // Make sure we return a string, not the entire results object
+    if (results && results.labels && results.labels.length > 0) {
+      return results.labels[0];
+    } else {
+      console.error("Unexpected classifier results format:", results);
+      return classifyIntentByKeywords(message);
+    }
   } catch (error) {
     console.error("Error classifying intent:", error);
     return classifyIntentByKeywords(message);

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { initializeModels, classifyIntent, generateResponse } from '../services/nlpService';
 import { toast } from '@/hooks/use-toast';
@@ -75,12 +76,15 @@ export const useCollegeChat = () => {
       const intent = await classifyIntent(newUserMessage);
       console.log(`Detected intent: ${intent}`);
       
-      const responseText = await generateResponse(newUserMessage, intent);
+      // Ensure intent is a string
+      const intentString = typeof intent === 'string' ? intent : 'general inquiry';
+      
+      const responseText = await generateResponse(newUserMessage, intentString);
       
       setTimeout(() => {
         setMessages(prevMessages => [
           ...prevMessages,
-          { text: responseText, sender: 'bot', intent }
+          { text: responseText, sender: 'bot', intent: intentString }
         ]);
         setIsLoading(false);
       }, 500);

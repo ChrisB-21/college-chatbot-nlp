@@ -5,7 +5,7 @@ import type { Pipeline } from "@huggingface/transformers";
 // GPU configuration for WebGPU acceleration
 const deviceConfig = { device: "webgpu" as const };
 
-let intentClassifier: Pipeline | null = null;
+let intentClassifier: any = null;
 
 export const initializeModels = async () => {
   try {

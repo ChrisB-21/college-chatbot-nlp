@@ -48,7 +48,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       case 'general inquiry':
         return 'General Info';
       default:
-        return message.intent;
+        return typeof message.intent === 'string' ? message.intent : 'Unknown';
     }
   };
   
@@ -69,7 +69,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           ? 'bg-blue-100 text-blue-800 ml-auto' 
           : 'bg-purple-50 text-gray-800 mr-auto border border-purple-100'
       }`}>
-        <p className="text-sm md:text-base whitespace-pre-wrap">{message.text}</p>
+        <p className="text-sm md:text-base whitespace-pre-wrap">
+          {typeof message.text === 'string' ? message.text : JSON.stringify(message.text)}
+        </p>
         
         {message.intent && !isUser && (
           <div className="mt-2 text-xs text-gray-500 flex items-center">
