@@ -46,9 +46,20 @@ const responses: Record<string, string[]> = {
 
 export const generateResponse = async (message: string, intent: string): Promise<string> => {
   const lowerCaseMessage = message.toLowerCase();
+  const words = lowerCaseMessage.split(/\s+/);
   
-  // More specific handling of user queries to provide targeted responses
-  if (intent === "admission inquiries") {
+  // Debug the intent we're working with
+  console.log(`Generating response for intent: ${intent}`);
+  
+  // Ensure we have a valid intent
+  let safeIntent = intent;
+  if (!responses[safeIntent]) {
+    console.warn(`Unknown intent provided: ${intent}, falling back to general inquiry`);
+    safeIntent = "general inquiry";
+  }
+  
+  // Look for specific keywords in the message to provide more targeted responses
+  if (safeIntent === "admission inquiries") {
     if (lowerCaseMessage.includes("deadline") || lowerCaseMessage.includes("when") || lowerCaseMessage.includes("date")) {
       return "The application process for SRMIST typically starts in November/December each year for the next academic year. The SRMJEEE exam is usually conducted in April, with results announced by May. Admission offers are made shortly after based on merit and counseling.";
     } else if (lowerCaseMessage.includes("requirement") || lowerCaseMessage.includes("need") || lowerCaseMessage.includes("document") || lowerCaseMessage.includes("eligibility")) {
@@ -58,7 +69,7 @@ export const generateResponse = async (message: string, intent: string): Promise
     } else if (lowerCaseMessage.includes("srmjeee") || lowerCaseMessage.includes("entrance") || lowerCaseMessage.includes("exam") || lowerCaseMessage.includes("test")) {
       return "SRMJEEE is the entrance exam for engineering programs at SRMIST. It tests Physics, Chemistry, and Mathematics (PCM). The computer-based test lasts 2.5 hours with 125 multiple-choice questions. Practice tests are available on the official website. SRMIST also accepts JEE Main scores for direct admission based on rank.";
     }
-  } else if (intent === "course information") {
+  } else if (safeIntent === "course information") {
     if (lowerCaseMessage.includes("computer science") || lowerCaseMessage.includes("cs") || lowerCaseMessage.includes("programming") || lowerCaseMessage.includes("it")) {
       return "SRMIST offers B.Tech in Computer Science Engineering with various specializations including AI & Machine Learning, Data Science, Cybersecurity, IoT, and Cloud Computing. The 4-year program includes industry internships, capstone projects, and opportunities for research. The department has state-of-the-art labs and strong industry connections with companies like Microsoft, Google, and IBM.";
     } else if (lowerCaseMessage.includes("business") || lowerCaseMessage.includes("management") || lowerCaseMessage.includes("mba") || lowerCaseMessage.includes("bba")) {
@@ -68,7 +79,7 @@ export const generateResponse = async (message: string, intent: string): Promise
     } else if (lowerCaseMessage.includes("medical") || lowerCaseMessage.includes("mbbs") || lowerCaseMessage.includes("health") || lowerCaseMessage.includes("doctor")) {
       return "SRM Medical College Hospital and Research Centre offers MBBS, MD/MS, BDS, Nursing, Allied Health Sciences, and Pharmacy programs. The medical campus features a 1500-bed teaching hospital, advanced diagnostic equipment, simulation labs, and specialized research centers. The programs are recognized by NMC (formerly MCI) and follow global medical education standards.";
     }
-  } else if (intent === "fee structure") {
+  } else if (safeIntent === "fee structure") {
     if (lowerCaseMessage.includes("payment plan") || lowerCaseMessage.includes("installment") || lowerCaseMessage.includes("emi")) {
       return "SRMIST offers flexible payment plans allowing students to pay tuition in semester-wise installments. Some programs also offer EMI options through partner banks. There's an initial registration fee followed by semester payments. Special arrangements can be discussed with the Finance Office for students with financial constraints.";
     } else if (lowerCaseMessage.includes("international") || lowerCaseMessage.includes("foreign") || lowerCaseMessage.includes("nri")) {
@@ -78,7 +89,7 @@ export const generateResponse = async (message: string, intent: string): Promise
     } else if (lowerCaseMessage.includes("medical") || lowerCaseMessage.includes("mbbs")) {
       return "MBBS program at SRMIST costs approximately ₹15-20 lakhs per annum. Dental (BDS) program costs around ₹6-9 lakhs per annum. These programs have additional fees for lab usage, clinical training, and medical equipment. Scholarship opportunities are available for meritorious students.";
     }
-  } else if (intent === "placement information") {
+  } else if (safeIntent === "placement information") {
     if (lowerCaseMessage.includes("salary") || lowerCaseMessage.includes("package") || lowerCaseMessage.includes("ctc")) {
       return "At SRMIST, the average salary package ranges from ₹4-6 lakhs per annum across programs. Top performers receive packages of ₹10-42 lakhs. Computer Science and IT programs typically see higher average packages of ₹6-8 lakhs. The highest packages are usually offered by global tech giants and financial institutions.";
     } else if (lowerCaseMessage.includes("company") || lowerCaseMessage.includes("recruiter") || lowerCaseMessage.includes("who")) {
@@ -90,8 +101,16 @@ export const generateResponse = async (message: string, intent: string): Promise
     }
   }
   
-  // Get random response from the appropriate category if no specific match
-  const availableResponses = responses[intent] || responses["general inquiry"];
+  // If no specific match was found, analyze the query to find the most relevant response
+  const availableResponses = responses[safeIntent];
+  
+  // Check if we have any responses for this intent
+  if (!availableResponses || availableResponses.length === 0) {
+    console.warn(`No responses available for intent: ${safeIntent}`);
+    return "I'm sorry, but I don't have specific information about that. Please try asking another question about SRM University's admissions, courses, fees, scholarships, campus facilities, or placements.";
+  }
+  
+  // Return a random response from the appropriate category
   const randomIndex = Math.floor(Math.random() * availableResponses.length);
   return availableResponses[randomIndex];
 };

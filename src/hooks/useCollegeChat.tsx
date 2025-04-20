@@ -24,7 +24,7 @@ export const useCollegeChat = () => {
         if (success) {
           toast({
             title: "AI Model Loaded",
-            description: "SRM University Assistant is ready with GPU acceleration."
+            description: "SRM University Assistant is ready to answer your questions."
           });
           
           setMessages([
@@ -36,7 +36,7 @@ export const useCollegeChat = () => {
         } else {
           toast({
             title: "AI Model Information",
-            description: "Using standard mode without GPU acceleration.",
+            description: "Using standard mode without advanced features.",
             variant: "default"
           });
           
@@ -77,16 +77,17 @@ export const useCollegeChat = () => {
       const intent = await classifyIntent(newUserMessage);
       console.log(`Detected intent: ${intent}`);
       
-      // Ensure intent is a string before generating a response
-      const intentString = typeof intent === 'string' ? intent : 'general inquiry';
-      
       // Generate a response based on the classified intent
-      const responseText = await generateResponse(newUserMessage, intentString);
+      const responseText = await generateResponse(newUserMessage, intent);
       
       setTimeout(() => {
         setMessages(prevMessages => [
           ...prevMessages,
-          { text: responseText, sender: 'bot', intent: intentString }
+          { 
+            text: responseText, 
+            sender: 'bot', 
+            intent: intent 
+          }
         ]);
         setIsLoading(false);
       }, 500);
@@ -98,7 +99,8 @@ export const useCollegeChat = () => {
           ...prevMessages,
           { 
             text: "I'm having trouble processing your request right now. Could you try rephrasing your question about SRM University?", 
-            sender: 'bot' 
+            sender: 'bot',
+            intent: "general inquiry"
           }
         ]);
         setIsLoading(false);

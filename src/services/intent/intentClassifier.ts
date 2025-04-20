@@ -1,4 +1,3 @@
-
 import { getIntentClassifier } from '../models/modelInitializer';
 
 const classifyIntentByKeywords = (message: string): string => {
@@ -64,6 +63,16 @@ const classifyIntentByKeywords = (message: string): string => {
 
 export const classifyIntent = async (message: string): Promise<string> => {
   try {
+    // Always use keyword classification as our primary method for better accuracy
+    const keywordIntent = classifyIntentByKeywords(message);
+    
+    // If we have a specific intent from keywords, use it directly
+    if (keywordIntent !== "general inquiry") {
+      console.log(`Using keyword-based intent: ${keywordIntent}`);
+      return keywordIntent;
+    }
+    
+    // Otherwise, attempt to use the model as a fallback
     const labels = [
       "admission inquiries",
       "course information",
@@ -76,10 +85,9 @@ export const classifyIntent = async (message: string): Promise<string> => {
 
     const classifier = getIntentClassifier();
     
-    // If model isn't loaded or we encounter issues, fall back to keyword classification
     if (!classifier) {
-      console.log("Using keyword-based intent classification as fallback");
-      return classifyIntentByKeywords(message);
+      console.log("Model not available, using keyword classification");
+      return keywordIntent;
     }
 
     try {
@@ -88,24 +96,27 @@ export const classifyIntent = async (message: string): Promise<string> => {
       });
 
       console.log("Intent classification results:", results);
-
-      // Fix: Extract the proper label from the results
-      if (results && Array.isArray(results.labels) && results.labels.length > 0) {
-        return results.labels[0];
-      } else if (results && typeof results.labels === 'object' && results.scores && Array.isArray(results.scores)) {
-        // If the structure is different than expected, try to find the highest scoring label
-        const highestScoreIndex = results.scores.indexOf(Math.max(...results.scores));
-        if (highestScoreIndex >= 0 && highestScoreIndex < labels.length) {
-          return labels[highestScoreIndex];
+      
+      // Fix: More robust handling of results
+      if (results && typeof results === 'object') {
+        // Try to find the highest scoring label
+        if (Array.isArray(results.scores) && Array.isArray(results.labels)) {
+          // Find the index of the highest score
+          const highestScoreIndex = results.scores.indexOf(Math.max(...results.scores));
+          if (highestScoreIndex >= 0 && highestScoreIndex < results.labels.length) {
+            const modelIntent = results.labels[highestScoreIndex];
+            console.log(`Using model-based intent: ${modelIntent}`);
+            return modelIntent;
+          }
         }
       }
       
-      // If we can't extract a label from the model output, use keyword matching
-      console.log("Falling back to keyword classification due to unexpected model output format");
-      return classifyIntentByKeywords(message);
+      // If model results are invalid, fall back to keyword classification
+      console.log(`Falling back to keyword classification: ${keywordIntent}`);
+      return keywordIntent;
     } catch (classifierError) {
       console.error("Error during model-based classification:", classifierError);
-      return classifyIntentByKeywords(message);
+      return keywordIntent;
     }
   } catch (error) {
     console.error("Error in intent classification process:", error);
